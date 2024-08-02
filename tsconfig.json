@@ -19,11 +19,11 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": [""],
+      "@/*": ["./*"],
       "@styles/*": ["styles/*"],
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
-      "@config": ["utils/config"]
+      "@config/*": ["config/*"]
     }
   },
   "include": [
