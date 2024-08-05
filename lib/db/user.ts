@@ -10,3 +10,7 @@ export async function getUserById(uid: string) {
   if (usersInDb.length == 0) return undefined;
   return usersInDb[0];
 }
+
+export async function updateUserRole(uid: string, role: 'ADMIN' | 'USER') {
+  await db.update(users).set({ role }).where(eq(users.id, uid));
+}

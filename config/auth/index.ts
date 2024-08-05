@@ -1,7 +1,7 @@
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from '@config/db';
-import { Google } from '@config/env-vars';
-import { getUserById } from '@utils/db/user';
+import { ADMIN_EMAIL, Google } from '@config/env-vars';
+import { getUserById, updateUserRole } from '@db/user';
 import NextAuth from 'next-auth';
 import GoogleAuthProvider from 'next-auth/providers/google';
 
@@ -17,6 +17,11 @@ export const { handlers, signIn, auth } = NextAuth({
       const user = await getUserById(token.sub);
       if (!user) return token;
       token.role = user.role;
+
+      if (ADMIN_EMAIL === user.email && user.role !== 'ADMIN') {
+        await updateUserRole(user.id, 'ADMIN');
+      }
+
       return token;
     },
     session: async ({ session, token }) => {

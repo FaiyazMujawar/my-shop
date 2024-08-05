@@ -19,12 +19,13 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"],
       "@styles/*": ["styles/*"],
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
       "@config/*": ["config/*"],
-      "@db/*": ["utils/db/*"]
+      "@db/*": ["lib/db/*"],
+      "@custom-types/*": ["custom-types/*"],
+      "@/*": ["./*"]
     }
   },
   "include": [

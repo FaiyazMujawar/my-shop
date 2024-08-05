@@ -1,12 +1,14 @@
 'use client';
 
-import { signOut } from 'next-auth/react';
-import { PiSignOut } from 'react-icons/pi';
+// TODO: use server component to signout
 
+import { Button } from '@components/ui/button';
+import { signOut } from 'next-auth/react';
+import { MdLogout } from 'react-icons/md';
 export default function SignOutButton() {
   return (
-    <div className='cursor-pointer' onClick={() => signOut()}>
-      <PiSignOut size={25} />
-    </div>
+    <Button variant={'ghost'} onClick={() => signOut()}>
+      <MdLogout className='mr-2' /> Sign Out
+    </Button>
   );
 }
