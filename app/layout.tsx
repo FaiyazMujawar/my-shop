@@ -21,7 +21,7 @@ export default function RootLayout({
       >
         <Providers>
           <Navigation />
-          <div className='h-full'>{children}</div>
+          <div className='h-full w-[80%] mx-auto py-10'>{children}</div>
         </Providers>
       </body>
     </html>

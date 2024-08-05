@@ -25,3 +25,5 @@
 - [ ] UI improvements
 
 - [ ] Dashboard page
+
+- [ ] error handling

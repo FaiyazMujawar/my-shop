@@ -22,7 +22,6 @@ export const POST = async (req: NextRequest) => {
   try {
     await createService(body);
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       { error: 'Bad Request', messgae: error },
       { status: 400 }

@@ -5,7 +5,7 @@ export default async function Home() {
   const session = await auth();
 
   return (
-    <div className='w-[80%] mx-auto py-10'>
+    <div>
       <div className='flex justify-between'>
         <div>
           <h1 className='text-xl font-bold'>Welcome to MyShop</h1>

@@ -1,11 +1,12 @@
 'use client';
 
-import { createService } from '@/lib/http/services';
 import { Questions } from '@components/services/questions';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { Textarea } from '@components/ui/textarea';
+import { useToast } from '@components/ui/use-toast';
 import { Service } from '@custom-types/service';
+import { createService } from '@http/service';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
@@ -18,10 +19,12 @@ const CreateServicePage = () => {
     questions: [],
   });
 
+  const { toast } = useToast();
+
   const router = useRouter();
 
   return (
-    <div className='w-[80%] mx-auto py-10'>
+    <div>
       <div className='flex space-x-4'>
         <div className='space-y-4 w-3/5'>
           <Input
@@ -34,7 +37,6 @@ const CreateServicePage = () => {
                 ...service,
                 title: e.target.value,
               }));
-              console.log({ service });
             }}
           />
           <Textarea
@@ -63,15 +65,24 @@ const CreateServicePage = () => {
           />
           <Button
             size='lg'
-            onClick={() => {
-              console.log({ service });
-              createService(service)
-                .then()
-                .catch((error) => console.log(error))
-                .finally(() => {
-                  // redirect to home
-                  router.push('/');
+            onClick={async () => {
+              // TODO: Make toast work
+              try {
+                await createService(service);
+                toast({
+                  title: 'Service created successfully!',
+                  duration: 1000,
                 });
+              } catch (error) {
+                console.error(error);
+                toast({
+                  title: 'Service creation failed!',
+                  description: 'Something went wrong',
+                  duration: 1000,
+                });
+              } finally {
+                router.push('/');
+              }
             }}
           >
             <FaPlus className='mr-2' /> Add service

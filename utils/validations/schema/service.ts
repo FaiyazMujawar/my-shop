@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const ResponseInputSchema = z.enum(['text', 'number', 'date', 'file']);
 
 export const QuestionSchema = z.object({
+  id: z.string().optional(),
   text: z.string().min(1, { message: 'Question must be provided' }),
   type: ResponseInputSchema,
   required: z.boolean(),

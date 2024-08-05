@@ -1,3 +1,4 @@
+import ServiceCard from '@components/services/service-card';
 import { getAllServices } from '@db/service';
 
 export async function ServicesSection() {
@@ -16,13 +17,13 @@ export async function ServicesSection() {
   }
 
   return (
-    <div className='flex gap-4 py-10'>
-      {services.map((service) => (
-        <div key={service.id} className='cursor-pointer p-5 border rounded-md'>
-          <div className='font-bold'>{service.title}</div>
-          <div className='text-gray-500'>{service.description}</div>
-        </div>
-      ))}
+    <div className='flex gap-2 flex-wrap justify-center py-10'>
+      {/* TODO: remove this spread operator */}
+      {[...services, ...services, ...services, ...services].map(
+        (service, index) => (
+          <ServiceCard key={index} service={service} />
+        )
+      )}
     </div>
   );
 }

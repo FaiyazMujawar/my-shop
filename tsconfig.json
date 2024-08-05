@@ -25,6 +25,8 @@
       "@config/*": ["config/*"],
       "@db/*": ["lib/db/*"],
       "@custom-types/*": ["custom-types/*"],
+      "@lib/*": ["lib/*"],
+      "@http/*": ["lib/http/*"],
       "@/*": ["./*"]
     }
   },

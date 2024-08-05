@@ -16,16 +16,19 @@ export const { handlers, signIn, auth } = NextAuth({
       if (!token?.sub) return token;
       const user = await getUserById(token.sub);
       if (!user) return token;
+      token.uid = user.id;
       token.role = user.role;
 
       if (ADMIN_EMAIL === user.email && user.role !== 'ADMIN') {
-        await updateUserRole(user.id, 'ADMIN');
+        updateUserRole(user.id, 'ADMIN');
+        user.role = 'ADMIN';
       }
 
       return token;
     },
     session: async ({ session, token }) => {
       session.user.role = token.role;
+      session.user.id = token.uid;
       return session;
     },
   },
