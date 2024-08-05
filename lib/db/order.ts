@@ -1,6 +1,7 @@
 import { db } from '@config/db';
 import { orders, responses } from '@config/db/schema';
 import { getServiceById } from '@db/service';
+import { upload } from '@lib/storage';
 import { eq } from 'drizzle-orm';
 import { User } from 'next-auth';
 
@@ -42,7 +43,9 @@ export async function createOrder(form: FormData, user: User) {
   if (!service) {
     throw new Error(`Service ${serviceId} not found`);
   }
-  const userResponses = service.questions.map((question) => {
+
+  const userResponses: any[] = [];
+  for (const question of service.questions) {
     if (!form.get(question.id!)) {
       throw new Error(`Question ${question.id} is required`);
     }
@@ -53,14 +56,16 @@ export async function createOrder(form: FormData, user: User) {
       answer: '',
       url: '',
     };
-    if (question.type == 'text') {
-      response.answer = form.get(question.id!) as string;
-    } else if (question.type == 'file') {
+    if (question.type == 'file') {
       // TODO: handle file upload
-      response.url = (form.get(question.id!) as File).name;
+      const objectKey = await upload(form.get(question.id!) as File);
+      response.url = objectKey;
+    } else {
+      response.answer = form.get(question.id!) as string;
     }
-    return response;
-  });
+    userResponses.push(response);
+  }
+
   console.log(service.id, user.id);
   const order = await db
     .insert(orders)
