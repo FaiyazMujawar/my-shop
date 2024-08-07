@@ -1,9 +1,9 @@
-import { db } from '@config/db';
-import { orders, responses } from '@config/db/schema';
-import { getServiceById } from '@db/service';
-import { upload } from '@lib/storage';
-import { eq } from 'drizzle-orm';
-import { User } from 'next-auth';
+import { db } from "@config/db";
+import { orders, responses } from "@config/db/schema";
+import { getServiceById } from "@db/service";
+import { upload } from "@lib/storage";
+import { eq } from "drizzle-orm";
+import { User } from "next-auth";
 
 // TODO: format responses
 
@@ -25,7 +25,7 @@ export async function getAllOrders(user: User) {
         },
       },
       user: {
-        columns: { name: true },
+        columns: { name: true, email: true },
       },
     },
     columns: {
@@ -33,12 +33,12 @@ export async function getAllOrders(user: User) {
       serviceId: false,
     },
     where:
-      user.role != 'ADMIN' ? eq(orders.userId, user.id as string) : undefined,
+      user.role != "ADMIN" ? eq(orders.userId, user.id as string) : undefined,
   });
 }
 
 export async function createOrder(form: FormData, user: User) {
-  const serviceId = form.get('serviceId');
+  const serviceId = form.get("serviceId");
   const service = await getServiceById(serviceId as string);
   if (!service) {
     throw new Error(`Service ${serviceId} not found`);
@@ -52,11 +52,11 @@ export async function createOrder(form: FormData, user: User) {
     const response = {
       questionId: question.id!,
       type: question.type,
-      orderId: '',
-      answer: '',
-      url: '',
+      orderId: "",
+      answer: "",
+      url: "",
     };
-    if (question.type == 'file') {
+    if (question.type == "file") {
       // TODO: handle file upload
       const objectKey = await upload(form.get(question.id!) as File);
       response.url = objectKey;
