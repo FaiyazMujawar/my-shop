@@ -1,10 +1,10 @@
-import { Question, ResponseInputType } from '@custom-types/service';
 import { CiCalendar, CiFileOn } from 'react-icons/ci';
 import { GoNumber } from 'react-icons/go';
 import { RxText } from 'react-icons/rx';
+import { AddQuestion, ResponseInputType } from '~/types/service';
 
 type QuestionCardProps = {
-  question: Question;
+  question: AddQuestion;
 };
 
 function getInputTypeIcon(type: ResponseInputType) {

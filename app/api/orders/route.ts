@@ -1,6 +1,7 @@
-import { auth } from '@config/auth';
-import { createOrder, getAllOrders } from '@db/order';
+import { auth } from '~/config/auth';
+
 import { NextRequest, NextResponse } from 'next/server';
+import { createOrder, getAllOrders } from '~/services/orders';
 
 export const GET = async function getAllOrdersHandler() {
   const session = await auth();

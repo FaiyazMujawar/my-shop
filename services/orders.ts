@@ -2,23 +2,18 @@ import { eq } from 'drizzle-orm';
 import { User } from 'next-auth';
 import { db } from '~/db';
 import { answers, orders } from '~/db/schema';
+import { IAnswer, IOrder } from '~/types/order';
+import { getServiceById } from './service';
 import { upload } from '~/lib/storage';
-import { getServiceById } from '~/services/service';
 
-// TODO: format responses
-
-export async function getAllOrders(user: User) {
+export const getAllOrders = async (user: User): Promise<IOrder[]> => {
   return await db.query.orders.findMany({
-    with: {
-      service: true,
-      user: { columns: { name: true, email: true } },
-      answers: true,
-    },
-    where: user.role != 'ADMIN' ? eq(orders.userId, user.id!) : undefined,
+    with: { service: true, answers: true, user: true },
+    where: user?.role == 'ADMIN' ? undefined : eq(orders.userId, user.id!),
   });
-}
+};
 
-export async function createOrder(form: FormData, user: User) {
+export const createOrder = async (form: FormData, user: User) => {
   const serviceId = form.get('serviceId');
   const service = await getServiceById(serviceId as string);
   if (!service) {
@@ -30,25 +25,26 @@ export async function createOrder(form: FormData, user: User) {
     if (!form.get(question.id!)) {
       throw new Error(`Question ${question.id} is required`);
     }
-    const response = {
+    const answer: Partial<IAnswer> = {
       questionId: question.id!,
       type: question.type,
-      orderId: '',
-      answer: '',
-      url: '',
+      orderId: undefined,
+      answer: undefined,
+      filename: undefined,
+      objectKey: undefined,
     };
     if (question.type == 'file') {
-      // TODO: handle file upload
-      const objectKey = await upload(form.get(question.id!) as File);
-      response.url = objectKey;
+      const file = (form.get(question.id!) as unknown) as File;
+      const objectKey = await upload(file);
+      answer.objectKey = objectKey;
+      answer.filename = file.name;
     } else {
-      response.answer = form.get(question.id!) as string;
+      answer.answer = (form.get(question.id!) as unknown) as string;
     }
-    userResponses.push(response);
+    userResponses.push(answer);
   }
 
-  console.log(service.id, user.id);
-  const order = await db
+  const orderId = await db
     .insert(orders)
     .values({
       serviceId: service.id!,
@@ -57,8 +53,8 @@ export async function createOrder(form: FormData, user: User) {
     .returning({ id: orders.id });
   await db.insert(answers).values(
     userResponses.map((response) => {
-      response.orderId = order[0].id;
+      response.orderId = orderId[0].id;
       return response;
     })
   );
-}
+};

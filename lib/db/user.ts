@@ -1,5 +1,5 @@
-import { db } from '@config/db';
-import { users } from '@config/db/schema/auth';
+import { db } from '~/db';
+import { users } from '~/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function getUserById(uid: string) {

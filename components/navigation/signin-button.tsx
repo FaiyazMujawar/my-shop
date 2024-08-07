@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@components/ui/button';
 import { signIn } from 'next-auth/react';
 import { FaGoogle } from 'react-icons/fa6';
+import { Button } from '~/components/ui/button';
 
 // TODO: use server component to signin with google
 

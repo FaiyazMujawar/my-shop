@@ -1,15 +1,15 @@
 'use client';
 
-import { Button } from '@components/ui/button';
-import { Service } from '@custom-types/service';
 import { useRouter } from 'next/navigation';
 import { FaEye } from 'react-icons/fa6';
+import { Button } from '~/components/ui/button';
+import { IService } from '~/types/service';
 
 type ServiceCardProps = {
-  service: Service;
+  service: IService;
 };
 
-const ServiceCard = ({ service }: ServiceCardProps) => {
+export const ServiceCard = ({ service }: ServiceCardProps) => {
   const router = useRouter();
 
   function redirectToService() {
@@ -30,5 +30,3 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
     </div>
   );
 };
-
-export default ServiceCard;

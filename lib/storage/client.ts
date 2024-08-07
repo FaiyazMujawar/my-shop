@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { S3_CONFIG } from '@config/env-vars';
+import env from '~/config/env';
 
 export class StorageClient {
   private static client: S3Client | undefined = undefined;
@@ -9,10 +9,11 @@ export class StorageClient {
   static instance() {
     if (!StorageClient.client) {
       StorageClient.client = new S3Client({
-        region: S3_CONFIG.region,
+        region: env.S3_REGION,
+        endpoint: env.S3_ENDPOINT,
         credentials: {
-          accessKeyId: S3_CONFIG.credentials.accessKey,
-          secretAccessKey: S3_CONFIG.credentials.secret,
+          accessKeyId: env.S3_ACCESS_KEY,
+          secretAccessKey: env.S3_SECRET_KEY,
         },
       });
     }

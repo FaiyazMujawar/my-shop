@@ -1,8 +1,9 @@
-import OrderForm from '@components/order/order-form';
-import QuestionCard from '@components/services/questions/question-card';
-import { auth } from '@config/auth';
-import { getServiceById } from '@db/service';
 import { redirect } from 'next/navigation';
+import { OrderForm } from '~/components/order/order-form';
+import QuestionCard from '~/components/question-card';
+
+import { auth } from '~/config/auth';
+import { getServiceById } from '~/lib/db/service';
 
 type ServicePageProps = {
   params: {

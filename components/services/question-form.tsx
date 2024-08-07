@@ -1,7 +1,8 @@
 'use client';
 
-import { Button } from '@components/ui/button';
-import { Checkbox } from '@components/ui/checkbox';
+import { DialogClose } from '@radix-ui/react-dialog';
+import { Button } from '~/components/ui/button';
+import { Checkbox } from '~/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog';
+} from '~/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,27 +18,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu';
-import { Input } from '@components/ui/input';
-import { Question, ResponseInputType } from '@custom-types/service';
-import { DialogClose } from '@radix-ui/react-dialog';
+} from '~/components/ui/dropdown-menu';
+import { Input } from '~/components/ui/input';
+import { AddQuestion, ResponseInputType } from '~/types/service';
 
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
 type QuestionFormProps = {
-  onAddQuestion: (question: Question) => void;
+  onAddQuestion: (question: AddQuestion) => void;
 };
 
 export const QuestionForm = (props: QuestionFormProps) => {
-  const [question, setQuestion] = useState<Question>({
+  const [question, setQuestion] = useState<AddQuestion>({
     text: '',
     type: 'text',
     required: false,
   });
-  const [selectedInputType, setSelectedInputType] =
-    useState<ResponseInputType>('text');
+  const [selectedInputType, setSelectedInputType] = useState<ResponseInputType>(
+    'text'
+  );
   return (
     <Dialog>
       <DialogTrigger>

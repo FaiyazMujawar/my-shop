@@ -1,23 +1,25 @@
 'use client';
 
-import { Questions } from '@components/services/questions';
-import { Button } from '@components/ui/button';
-import { Input } from '@components/ui/input';
-import { Textarea } from '@components/ui/textarea';
-import { useToast } from '@components/ui/use-toast';
-import { Service } from '@custom-types/service';
-import { createService } from '@http/service';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Textarea } from '~/components/ui/textarea';
+import { useToast } from '~/components/ui/use-toast';
+import { AddQuestion, AddService } from '~/types/service';
+
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
+import { createService } from '~/lib/http/service';
+import { Questions } from '~/components/services/questions-section';
 
 const CreateServicePage = () => {
-  const [service, setService] = useState<Service>({
+  const [service, setService] = useState<AddService>({
     title: '',
     description: '',
     price: 0,
     questions: [],
   });
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const { toast } = useToast();
 
@@ -33,7 +35,7 @@ const CreateServicePage = () => {
             value={service.title}
             className='text-3xl py-10 px-5'
             onChange={(e) => {
-              setService((service) => ({
+              setService((service: AddService) => ({
                 ...service,
                 title: e.target.value,
               }));
@@ -45,7 +47,7 @@ const CreateServicePage = () => {
             rows={15}
             className='p-5 text-lg'
             onChange={(e) => {
-              setService((service) => ({
+              setService((service: AddService) => ({
                 ...service,
                 description: e.target.value,
               }));
@@ -57,7 +59,7 @@ const CreateServicePage = () => {
             type='number'
             className='p-5 text-lg'
             onChange={(e) => {
-              setService((service) => ({
+              setService((service: AddService) => ({
                 ...service,
                 price: parseInt(e.target.value),
               }));
@@ -65,8 +67,9 @@ const CreateServicePage = () => {
           />
           <Button
             size='lg'
+            disabled={submitDisabled}
             onClick={async () => {
-              // TODO: Make toast work
+              setSubmitDisabled(true);
               try {
                 await createService(service);
                 toast({
@@ -80,9 +83,11 @@ const CreateServicePage = () => {
                   description: 'Something went wrong',
                   duration: 1000,
                 });
-              } finally {
-                router.push('/');
               }
+              setTimeout(() => {
+                setSubmitDisabled(false);
+                router.push('/');
+              }, 1000);
             }}
           >
             <FaPlus className='mr-2' /> Add service
@@ -90,8 +95,8 @@ const CreateServicePage = () => {
         </div>
         <div className='w-2/5'>
           <Questions
-            onAddQuestion={(question) => {
-              setService((service) => {
+            onAddQuestion={(question: AddQuestion) => {
+              setService((service: AddService) => {
                 return {
                   ...service,
                   questions: [...service.questions, question],

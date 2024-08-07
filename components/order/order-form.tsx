@@ -1,6 +1,10 @@
 'use client';
 
-import { Button } from '@components/ui/button';
+import FormData from 'form-data';
+import { Session } from 'next-auth';
+import { useState } from 'react';
+import { BiPackage } from 'react-icons/bi';
+import { Button } from '~/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -10,29 +14,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog';
-import { Input } from '@components/ui/input';
-import { Label } from '@components/ui/label';
-import { Question, Service } from '@custom-types/service';
-import { createOrder } from '@http/order';
-import FormData from 'form-data';
-import { Session } from 'next-auth';
-import { useState } from 'react';
-import { BiPackage } from 'react-icons/bi';
+} from '~/components/ui/dialog';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import { createOrder } from '~/lib/http/order';
+import { AddQuestion, IService } from '~/types/service';
 
 type OrderFormProps = {
   session?: Session | null;
-  service: Service;
+  service: IService;
 };
 
-const OrderForm = ({ service }: OrderFormProps) => {
+export const OrderForm = ({ service }: OrderFormProps) => {
   const [responses, setResponses] = useState<Map<string, any>>(new Map());
 
   function handleChange({
     target: { name, value, type, files },
   }: React.ChangeEvent<HTMLInputElement>) {
     setResponses((values) => {
-      values.set(name, type == 'file' ? files![0] : value);
+      values.set(name, type == 'file' ? files?.[0] : value);
       return values;
     });
   }
@@ -66,7 +66,7 @@ const OrderForm = ({ service }: OrderFormProps) => {
               <span className='text-gray-700'>{service.title}</span>
             </DialogDescription>
             {/* Form Body */}
-            {service.questions.map((question: Question) => (
+            {service.questions.map((question: AddQuestion) => (
               <div key={question.id}>
                 <Label>{question.text}</Label>
                 <Input
@@ -95,5 +95,3 @@ const OrderForm = ({ service }: OrderFormProps) => {
     </div>
   );
 };
-
-export default OrderForm;

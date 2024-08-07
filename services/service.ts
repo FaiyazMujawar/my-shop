@@ -1,10 +1,10 @@
 import { db } from '~/db';
 import { questions, services } from '~/db/schema';
-import { AddService, IService } from '~/types/service';
 import { AddServiceSchema } from '~/utils/validations/schema';
 import { eq } from 'drizzle-orm';
+import { IService, AddService } from '~/types/service';
 
-export async function getAllServices() {
+export async function getAllServices(): Promise<IService[]> {
   return await db.query.services.findMany({
     with: { questions: true },
   });
@@ -19,10 +19,13 @@ export async function getServiceById(
   });
 }
 
-export async function createService(request: AddService) {
+export async function addService(request: AddService) {
   var validation = AddServiceSchema.safeParse(request);
   if (!validation.success) {
-    throw new Error('Invalid request body');
+    throw new Error(
+      'Invalid request body: ' +
+        validation.error.errors.map((error) => error.message).join(', ')
+    );
   }
   const serviceId = await db
     .insert(services)
@@ -31,7 +34,7 @@ export async function createService(request: AddService) {
       id: services.id,
     });
   await db.insert(questions).values(
-    request.questions.map((question: AddService['questions'][0]) => {
+    request.questions.map((question) => {
       return {
         ...question,
         serviceId: serviceId[0].id,

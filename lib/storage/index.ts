@@ -1,14 +1,16 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { S3_CONFIG } from '@config/env-vars';
+import env from '~/config/env';
 import { StorageClient } from './client';
 
 export async function upload(file: File) {
+  // TODO: make this better
   const client = StorageClient.instance();
   const fileKey = generateFileKey(file.name);
+  const buffer = (await file.arrayBuffer()) as Buffer;
   const command = new PutObjectCommand({
-    Bucket: S3_CONFIG.bucket,
+    Bucket: env.S3_BUCKET,
     Key: fileKey,
-    Body: file,
+    Body: buffer,
   });
   await client.send(command);
   return fileKey;

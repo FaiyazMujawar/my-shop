@@ -1,13 +1,13 @@
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import { db } from '@config/db';
-import { ADMIN_EMAIL, Google } from '@config/env-vars';
-import { getUserById, updateUserRole } from '@db/user';
 import NextAuth from 'next-auth';
 import GoogleAuthProvider from 'next-auth/providers/google';
+import env from '~/config/env';
+import { db } from '~/db';
+import { getUserById, updateUserRole } from '~/lib/db/user';
 
 const GoogleAuth = GoogleAuthProvider({
-  clientId: Google.CLIENT_ID,
-  clientSecret: Google.CLIENT_SECRET,
+  clientId: env.GOOGLE_CLIENT_ID,
+  clientSecret: env.GOOGLE_CLIENT_SECRET,
 });
 
 export const { handlers, signIn, auth } = NextAuth({
@@ -19,7 +19,7 @@ export const { handlers, signIn, auth } = NextAuth({
       token.uid = user.id;
       token.role = user.role;
 
-      if (ADMIN_EMAIL === user.email && user.role !== 'ADMIN') {
+      if (env.ADMIN_EMAIL === user.email && user.role !== 'ADMIN') {
         updateUserRole(user.id, 'ADMIN');
         user.role = 'ADMIN';
       }

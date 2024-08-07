@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@components/ui/button';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa6';
+import { Button } from '~/components/ui/button';
 
 interface CreateServicesButtonProps {
   session?: Session | null;
@@ -11,7 +11,7 @@ interface CreateServicesButtonProps {
 
 export function CreateServicesButton({ session }: CreateServicesButtonProps) {
   const router = useRouter();
-  if (session?.user.role != 'ADMIN') {
+  if (session?.user?.role != 'ADMIN') {
     return <div></div>;
   }
 
@@ -20,10 +20,9 @@ export function CreateServicesButton({ session }: CreateServicesButtonProps) {
   }
 
   return (
-    <div>
-      <Button onClick={handleClick}>
-        <FaPlus className='mr-2' />
-        Add Services
+    <div className='fixed bottom-10 right-10'>
+      <Button className='text-lg px-4 py-6 rounded-full' onClick={handleClick}>
+        <FaPlus className='mr-2' size={20} /> Add Service
       </Button>
     </div>
   );

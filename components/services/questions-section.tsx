@@ -1,12 +1,12 @@
 'use client';
 
-import QuestionCard from '@components/services/questions/question-card';
-import { QuestionForm } from '@components/services/questions/question-form';
-import { Question } from '@custom-types/service';
+import QuestionCard from '~/components/question-card';
+import { AddQuestion } from '~/types/service';
+import { QuestionForm } from './question-form';
 
 type QuestionProps = {
-  onAddQuestion: (questions: Question) => void;
-  questions: Question[];
+  onAddQuestion: (questions: AddQuestion) => void;
+  questions: AddQuestion[];
 };
 
 export const Questions = (props: QuestionProps) => {

@@ -19,15 +19,8 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@styles/*": ["styles/*"],
-      "@components/*": ["components/*"],
-      "@utils/*": ["utils/*"],
-      "@config/*": ["config/*"],
-      "@db/*": ["lib/db/*"],
-      "@custom-types/*": ["custom-types/*"],
-      "@lib/*": ["lib/*"],
-      "@http/*": ["lib/http/*"],
-      "@/*": ["./*"]
+      "~/types/*": ["app-types/*"],
+      "~/*": ["./*"]
     }
   },
   "include": [
