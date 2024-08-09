@@ -2,14 +2,29 @@ import { eq } from 'drizzle-orm';
 import { User } from 'next-auth';
 import { db } from '~/db';
 import { answers, orders } from '~/db/schema';
+import { upload } from '~/lib/storage';
 import { IAnswer, IOrder } from '~/types/order';
 import { getServiceById } from './service';
-import { upload } from '~/lib/storage';
 
 export const getAllOrders = async (user: User): Promise<IOrder[]> => {
   return await db.query.orders.findMany({
-    with: { service: true, answers: true, user: true },
+    with: {
+      service: true,
+      answers: { with: { question: true } },
+      user: true,
+    },
     where: user?.role == 'ADMIN' ? undefined : eq(orders.userId, user.id!),
+  });
+};
+
+export const getOrderById = async (id: string): Promise<IOrder | undefined> => {
+  return await db.query.orders.findFirst({
+    where: eq(orders.id, id),
+    with: {
+      service: true,
+      answers: { with: { question: true } },
+      user: true,
+    },
   });
 };
 

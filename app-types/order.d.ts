@@ -1,5 +1,5 @@
-import { orders, users, services, answers } from '~/db/schema';
-import { AddQuestion, IService } from '~/types/service';
+import { answers, orders, services, users } from '~/db/schema';
+import { AddQuestion, IQuestion } from '~/types/service';
 
 export type QuestionResponse = {
   id?: string;
@@ -9,7 +9,9 @@ export type QuestionResponse = {
   url: string;
 };
 
-export type IAnswer = typeof answers.$inferSelect;
+export type IAnswer = typeof answers.$inferSelect & {
+  question: !IQuestion;
+};
 
 export type IOrder = typeof orders.$inferSelect & {
   user: typeof users.$inferSelect;
