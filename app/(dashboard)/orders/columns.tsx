@@ -2,18 +2,16 @@
 
 import {
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { RedirectButton } from '~/components/redirect-button';
 import { Button } from '~/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuSeparator,
+  DropdownMenu
 } from '~/components/ui/dropdown-menu';
 import { IOrder } from '~/types/order';
-import ActionButton from './action-button';
 
 export const columns: ColumnDef<IOrder>[] = [
   {
@@ -50,9 +48,8 @@ export const columns: ColumnDef<IOrder>[] = [
       },
     }) => (
       <span
-        className={`text-xs text-gray-500 font-semibold ${
-          status == 'PENDING' ? '' : 'text-green-500'
-        }`}
+        className={`text-xs text-gray-500 font-semibold ${status == 'PENDING' ? '' : 'text-green-500'
+          }`}
       >
         {status}
       </span>
@@ -72,17 +69,8 @@ export const columns: ColumnDef<IOrder>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='border rounded p-3 bg-white space-y-2'>
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <ActionButton
-                title='View'
-                onClick={() => {
-                  console.log('1');
-                }}
-              />
-              <div className='text-red-500'>
-                <ActionButton title='Reject' onClick={() => {}} />
-              </div>
+              <RedirectButton className='block' variant={'outline'} title='View Details' redirectUri={`/orders/${order.id}`} />
+              <Button className='w-full' variant={'destructive'}>Delete</Button>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
