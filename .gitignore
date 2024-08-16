@@ -27,6 +27,13 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env*
+
+# IDE
+.DS_STORE
+.vscode
+.idea
+.zed
 
 # vercel
 .vercel
