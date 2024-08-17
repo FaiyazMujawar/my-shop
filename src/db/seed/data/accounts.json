@@ -1,0 +1,14 @@
+[
+  {
+    "userId": "b33b677b-6fec-42ea-a012-fa6023215c54",
+    "type": "oidc",
+    "provider": "google",
+    "providerAccountId": "102093406358400504439"
+  },
+  {
+    "userId": "22b3ad70-e9df-4eb3-b8c5-b58b597dcde0",
+    "type": "oidc",
+    "provider": "google",
+    "providerAccountId": "102353127257388967993"
+  }
+]

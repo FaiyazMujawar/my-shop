@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "drizzle-kit push",
-    "db:migrate": "tsx db/migrations/index.ts",
+    "db:migrate": "tsx src/db/migrations/index.ts",
+    "db:seed": "tsx src/db/seed/index.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
