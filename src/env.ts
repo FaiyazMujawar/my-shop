@@ -3,12 +3,18 @@ import { z, ZodError } from 'zod';
 
 config({ path: ['.env'] });
 
+const stringBoolean = z.coerce
+  .string()
+  .transform((str) => str === 'true')
+  .default('false');
+
 const envSchema = z.object({
   APP_NAME: z.string(),
   AUTH_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   DATABASE_URL: z.string(),
+  SHOW_SQL: stringBoolean,
 });
 
 try {
