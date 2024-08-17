@@ -15,3 +15,7 @@ export async function getServiceById(
     with: { questions: true },
   })) as IService | undefined;
 }
+
+export async function deleteService(id: string) {
+  await db.delete(services).where(eq(services.id, id));
+}

@@ -4,6 +4,7 @@ import ResponseIcon from '~/components/response-icon';
 import { Button } from '~/components/ui/button';
 import { auth } from '~/config/auth';
 import { getServiceById } from '~/data/services';
+import AdminActions from './admin-actions';
 
 type ServicePageProps = {
   params: {
@@ -35,16 +36,7 @@ const ServicePage = async ({ params }: ServicePageProps) => {
             </span>
             <span>₹{service.price}</span>
           </div>
-          {session && (
-            <div className='flex gap-2'>
-              <Button size={'sm'} variant={'secondary'}>
-                Edit
-              </Button>
-              <Button size={'sm'} variant={'destructive'}>
-                Delete
-              </Button>
-            </div>
-          )}
+          {session && <AdminActions serviceId={service.id} />}
         </div>
       </div>
       <div className='text-gray-500'>{service.description}</div>
