@@ -18,7 +18,7 @@ export const AddServiceSchema = z.object({
     .string()
     .min(1, { message: 'Description is required' })
     .max(300, { message: 'Description must be less than 1000 characters' }),
-  price: z
+  price: z.coerce
     .number({ invalid_type_error: 'Price is required' })
     .positive({ message: 'Price must be greater than 0' }),
   type: z.enum(['online', 'offline']),

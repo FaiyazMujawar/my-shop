@@ -14,9 +14,9 @@ export const questions = pgTable('questions', {
   question: text('title').notNull(),
   type: questionType('type').notNull().default('text'),
   required: boolean('required').notNull().default(false),
-  serviceId: uuid('serviceId').references(() => services.id, {
-    onDelete: 'cascade',
-  }),
+  serviceId: uuid('service_id')
+    .notNull()
+    .references(() => services.id, { onDelete: 'cascade' }),
 });
 
 export const questionRelations = relations(questions, ({ one }) => {

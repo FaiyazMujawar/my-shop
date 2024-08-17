@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { IService } from '~/app-types/service';
 import { Button } from '~/components/ui/button';
@@ -10,6 +11,7 @@ type ServiceCardProps = {
 };
 
 const ServiceCard = ({ service }: ServiceCardProps) => {
+  const router = useRouter();
   return (
     <div className='border rounded-sm p-3 flex flex-col justify-between space-y-4'>
       <Image
@@ -27,7 +29,12 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       <div className='flex justify-between items-center'>
         <span>₹{service.price}</span>
         <Button size={'icon'} variant={'outline'}>
-          <MdKeyboardArrowRight />
+          <MdKeyboardArrowRight
+            onClick={() => {
+              console.log('clicked');
+              router.push(`/services/${service.id}`);
+            }}
+          />
         </Button>
       </div>
     </div>

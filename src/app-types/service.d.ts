@@ -6,14 +6,14 @@ import {
   AddServiceSchema,
 } from '~/utils/validation/schema/service';
 
-export type IService = typeof services.$inferSelect & {
-  questions: IQuestion[];
-};
-
-export type IQuestion = typeof questions.$inferSelect;
-
 export type AddQuestion = z.infer<typeof AddQuestionSchema>;
 
 export type AddService = z.infer<typeof AddServiceSchema> & {
   questions: AddQuestion[];
+};
+
+export type IQuestion = typeof questions.$inferSelect;
+
+export type IService = typeof services.$inferSelect & {
+  questions: IQuestion[];
 };
