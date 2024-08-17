@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import ResponseIcon from '~/components/response-icon';
+import QuestionCard from '~/components/service-form/question-card';
 import { Button } from '~/components/ui/button';
 import { auth } from '~/config/auth';
 import { getServiceById } from '~/data/services';
@@ -29,38 +29,38 @@ const ServicePage = async ({ params }: ServicePageProps) => {
           className='rounded-lg overflow-hidden'
         />
         <div className='space-y-4'>
-          <div className='text-5xl font-bold'>{service.title}</div>
-          <div className='text-gray-600 text-xl flex items-center gap-4'>
+          <div>
             <span className='p-1 border rounded-sm text-xs'>
               {service.type}
             </span>
+          </div>
+          <div className='text-5xl font-bold'>{service.title}</div>
+          <div className='text-gray-600 text-xl flex items-center gap-4'>
             <span>₹{service.price}</span>
           </div>
-          {session && <AdminActions serviceId={service.id} />}
+          {session?.user?.role == 'admin' && (
+            <AdminActions serviceId={service.id} />
+          )}
+          {session?.user?.role == 'user' && (
+            <div>
+              {service.type == 'online' ? (
+                <Button>Order Now</Button>
+              ) : (
+                <div className='text-gray-500 italic'>
+                  Please visit store to avail this service
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+      <div className='text-xl'>Description</div>
       <div className='text-gray-500'>{service.description}</div>
-      <div className='text-2xl font-semibold'>Required details</div>
+      <div className='text-xl'>Required details</div>
       <div className='space-y-2'>
-        {service.questions.map((question) => (
-          <div
-            key={question.id}
-            className='border p-2 rounded-sm flex gap-2 items-center'
-          >
-            <ResponseIcon type={question.type} />
-            <div>{question.question}</div>
-            {question.required && <div className='text-red-500'>*</div>}
-          </div>
+        {service.questions.map((question, index) => (
+          <QuestionCard key={index} question={question} showDelete={false} />
         ))}
-      </div>
-      <div>
-        {service.type == 'online' ? (
-          <Button size={'lg'}>Order Now</Button>
-        ) : (
-          <div className='text-gray-500 italic'>
-            Please visit store to avail this service
-          </div>
-        )}
       </div>
     </div>
   );

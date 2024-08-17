@@ -23,7 +23,11 @@ const AdminActions = ({ serviceId }: Props) => {
   const router = useRouter();
   return (
     <div className='flex gap-2'>
-      <Button size={'sm'} variant={'secondary'}>
+      <Button
+        size={'sm'}
+        variant={'secondary'}
+        onClick={() => router.push(`/services/edit/${serviceId}`)}
+      >
         Edit
       </Button>
       <AlertDialog>

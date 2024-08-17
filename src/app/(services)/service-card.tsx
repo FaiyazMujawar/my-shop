@@ -28,13 +28,12 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       <div className='text-gray-500 line-clamp-2'>{service.description}</div>
       <div className='flex justify-between items-center'>
         <span>₹{service.price}</span>
-        <Button size={'icon'} variant={'outline'}>
-          <MdKeyboardArrowRight
-            onClick={() => {
-              console.log('clicked');
-              router.push(`/services/${service.id}`);
-            }}
-          />
+        <Button
+          variant={'outline'}
+          onClick={() => router.push(`/services/${service.id}`)}
+        >
+          View
+          <MdKeyboardArrowRight className='ml-2' />
         </Button>
       </div>
     </div>
