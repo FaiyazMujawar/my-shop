@@ -10,10 +10,10 @@ export async function getAllServices(): Promise<IService[]> {
 export async function getServiceById(
   id: string
 ): Promise<IService | undefined> {
-  return (await db.query.services.findFirst({
+  return await db.query.services.findFirst({
     where: eq(services.id, id),
     with: { questions: true },
-  })) as IService | undefined;
+  });
 }
 
 export async function deleteService(id: string) {

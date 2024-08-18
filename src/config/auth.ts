@@ -21,6 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .set({ role: 'admin' })
           .where(inArray(users.id, env.ADMIN_EMAILS));
       }
+      token.uid = user.id;
       token.role = user.role;
       return token;
     },

@@ -2,6 +2,7 @@
 
 import { Session } from 'next-auth';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { FaGoogle } from 'react-icons/fa6';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { Button } from '../ui/button';
@@ -18,6 +19,7 @@ type UserActionsProps = {
 };
 
 const UserActions = ({ session }: UserActionsProps) => {
+  const router = useRouter();
   if (!session) {
     return (
       <div>
@@ -45,6 +47,12 @@ const UserActions = ({ session }: UserActionsProps) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem
+            className='cursor-pointer'
+            onClick={() => router.push('/orders')}
+          >
+            View Orders
+          </DropdownMenuItem>
           <DropdownMenuItem
             className='cursor-pointer'
             onClick={async () => await logOut()}

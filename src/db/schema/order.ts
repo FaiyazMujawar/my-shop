@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgEnum, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './auth';
 import { services } from './service';
 import { userResponses } from './user-response';
@@ -16,7 +16,7 @@ export const orders = pgTable('orders', {
   serviceId: uuid('service_id')
     .notNull()
     .references(() => services.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   status: orderStatus('status').notNull().default('pending'),
