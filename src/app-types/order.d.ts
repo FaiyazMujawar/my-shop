@@ -9,7 +9,7 @@ export type IOrder = typeof orders.$inferSelect & {
 
 export type OrderRequest = {
   serviceId: string;
-  userResponses: Record<string, any>;
+  userResponses: Record<string, string>;
 };
 
 export type IMedia = typeof media.$inferSelect;

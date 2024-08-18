@@ -3,112 +3,114 @@ import {
   accounts,
   media,
   orders,
+  questions,
   services,
   userResponses,
   users,
 } from '../schema';
-import { questions } from '../schema/question';
-import accountsData from './data/accounts.json';
-import ordersData from './data/order.json';
-import servicesData from './data/services.json';
-import usersData from './data/users.json';
+import accountsJson from './data/accounts.json';
+import ordersJson from './data/order.json';
+import servicesJson from './data/services.json';
+import usersJson from './data/users.json';
 
-async function truncate() {
-  for (const table of [
-    users,
-    services,
-    questions,
-    orders,
-    userResponses,
-    media,
-    accounts,
-  ]) {
-    await db.delete(table);
-  }
+async function truncateDb() {
+  console.log('Truncating database');
+
+  await db.delete(userResponses).execute();
+  await db.delete(media).execute();
+  await db.delete(orders).execute();
+  await db.delete(services).execute();
+  await db.delete(accounts).execute();
+  await db.delete(users).execute();
+
+  console.log('Database truncated');
 }
 
 async function seed() {
-  console.log('Seeding database');
+  console.log('Starting seeding');
 
-  await truncate();
+  console.log('Seeding users');
+  await db.insert(users).values(usersJson).execute();
 
-  console.log('Inserting data in users');
-  await db.insert(users).values(usersData);
+  console.log('Seeding accounts');
+  await db
+    .insert(accounts)
+    .values(JSON.parse(JSON.stringify(accountsJson)))
+    .execute();
 
-  console.log('Inserting data in accounts');
-  await db.insert(accounts).values(
-    accountsData.map((account) => {
-      return {
-        ...account,
-        type: account.type as 'oauth' | 'oidc',
-      };
-    })
-  );
+  console.log('Seeding services');
 
-  console.log('Inserting data in services');
-  await db.insert(services).values(
-    servicesData.map((service) => {
-      return {
-        ...service,
-        type: service.type as 'online' | 'offline',
-      };
-    })
-  );
+  await db
+    .insert(services)
+    .values(JSON.parse(JSON.stringify(servicesJson)))
+    .execute();
 
-  const questionsData = servicesData.flatMap((service) => {
-    return service.questions.map((question) => {
-      return {
-        ...question,
-        type: question.type as 'file' | 'text' | 'date' | 'number',
-      };
-    });
-  });
+  console.log('Seeding questions');
+  await db
+    .insert(questions)
+    .values(
+      JSON.parse(JSON.stringify(servicesJson.flatMap((s) => s.questions)))
+    )
+    .execute();
 
-  console.log('Inserting data in questions');
-  await db.insert(questions).values(questionsData);
+  console.log('Seeding orders');
 
-  console.log('Inserting data in orders');
-  const dbOrders = ordersData.map((order) => {
-    return {
-      ...order,
-      completedAt: order.completedAt ? new Date(order.completedAt) : undefined,
-      createdAt: new Date(order.createdAt),
-      updatedAt: new Date(order.updatedAt),
-      status: order.status as 'pending' | 'completed',
-    };
-  });
-  await db.insert(orders).values(dbOrders);
+  await db
+    .insert(orders)
+    .values(
+      ordersJson.map((order) => ({
+        ...order,
+        status: order.status as
+          | 'pending'
+          | 'accepted'
+          | 'rejected'
+          | 'completed',
+        createdAt: new Date(order.createdAt),
+        updatedAt: new Date(order.updatedAt),
+        completedAt: order.completedAt
+          ? new Date(order.completedAt)
+          : undefined,
+      }))
+    )
+    .execute();
 
-  console.log('Inserting data in media');
-  const dbMedia = ordersData
-    .flatMap((order) => order.userResponses)
-    .map((response) => response.media)
-    .filter((media) => !!media)
-    .map((media) => {
-      return {
-        ...media,
-        createdAt: new Date(media.createdAt),
-        updatedAt: new Date(media.updatedAt),
-      };
-    });
-  await db.insert(media).values(dbMedia);
+  console.log('Seeding media');
+  await db
+    .insert(media)
+    .values(
+      ordersJson
+        .flatMap((order) => order.userResponses)
+        .map((response) => response.media)
+        .filter((media) => !!media)
+        .map((media) => ({
+          ...media,
+          createdAt: new Date(media.createdAt),
+          updatedAt: new Date(media.updatedAt),
+        }))
+    )
+    .execute();
 
-  console.log('Inserting data in user responses');
-  await db.insert(userResponses).values(
-    ordersData.flatMap((order) => {
-      return order.userResponses.map((response) => {
-        return {
+  console.log('Seeding user responses');
+  await db
+    .insert(userResponses)
+    .values(
+      ordersJson.flatMap((order) =>
+        order.userResponses.map((response) => ({
           ...response,
           media: response.media?.id,
-          createdAt: new Date(order.createdAt),
-          updatedAt: new Date(order.updatedAt),
-        };
-      });
-    })
-  );
+          createdAt: new Date(response.createdAt),
+          updatedAt: new Date(response.updatedAt),
+        }))
+      )
+    )
+    .execute();
 
-  console.log('Database seeded');
-  process.exit(0);
+  console.log('Seeding completed');
 }
 
-seed();
+truncateDb()
+  .then(async () => await seed())
+  .catch((error) => console.error(error))
+  .finally(() => {
+    process.exit();
+  });

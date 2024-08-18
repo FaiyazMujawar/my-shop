@@ -3,8 +3,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+import { OrderRequest } from '~/app-types/order';
 import { IQuestion, IService } from '~/app-types/service';
+import { getUploadUrl } from '~/app/actions';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -22,6 +25,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { ScrollArea } from '~/components/ui/scroll-area';
+import { placeOrder } from './actions';
 
 type OrderFormProps = {
   service: IService;
@@ -61,10 +66,38 @@ const OrderForm = ({ service }: OrderFormProps) => {
     defaultValues: getDefaultFormValues(service.questions),
   });
 
-  function onSubmit(data: FormType) {
-    console.log({ data });
-    form.reset();
-    setOpen(false);
+  async function onSubmit(data: FormType) {
+    const responses: Record<string, string> = {};
+    for (const question of service.questions) {
+      if (question.type == 'file') {
+        const file = data[question.id] as File;
+        const { url, mediaId } = await getUploadUrl(file.type, false);
+        const response = await fetch(url, {
+          method: 'PUT',
+          body: file,
+        });
+        const body = await response.json();
+        if (!response.ok) {
+          console.log(body);
+          return;
+        }
+        responses[question.id] = mediaId;
+      } else {
+        responses[question.id] = data[question.id];
+      }
+    }
+    const requestBody: OrderRequest = {
+      serviceId: service.id,
+      userResponses: responses,
+    };
+    const response = await placeOrder(requestBody);
+    if (!response.success) {
+      toast.error(response.error);
+    } else {
+      toast.success('Order placed successfully');
+      form.reset();
+      setOpen(false);
+    }
   }
 
   return (
@@ -74,43 +107,47 @@ const OrderForm = ({ service }: OrderFormProps) => {
           <Button variant={'secondary'}>Order Now</Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogTitle>Enter details</DialogTitle>
+          <DialogTitle className='px-4'>Enter details</DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-              {service.questions.map((question) => {
-                return (
-                  <FormField
-                    control={form.control}
-                    name={question.id}
-                    key={question.id}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <span>{question.question}</span>
-                          {question.required && (
-                            <span className='text-red-500'>*</span>
-                          )}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type={question.type}
-                            {...field}
-                            onChange={({ target: { value, files } }) => {
-                              if (question.type === 'file') {
-                                field.onChange(files?.[0]);
-                              } else {
-                                field.onChange(value);
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              })}
-              <DialogFooter>
+              <ScrollArea className='h-[50vh]'>
+                <div className='px-4 space-y-4'>
+                  {service.questions.map((question) => {
+                    return (
+                      <FormField
+                        control={form.control}
+                        name={question.id}
+                        key={question.id}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <span>{question.question}</span>
+                              {question.required && (
+                                <span className='text-red-500'>*</span>
+                              )}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type={question.type}
+                                onChange={({ target: { value, files } }) => {
+                                  if (question.type === 'file') {
+                                    field.onChange(files?.[0]);
+                                  } else {
+                                    field.onChange(value);
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    );
+                  })}
+                </div>
+              </ScrollArea>
+
+              <DialogFooter className='px-4'>
                 <Button type='submit'>Place Order</Button>
               </DialogFooter>
             </form>

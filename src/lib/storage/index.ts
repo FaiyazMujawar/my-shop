@@ -16,5 +16,6 @@ export async function getPresignedUploadUrl(
     Key: key,
     ContentType: type,
   });
-  return await getSignedUrl(client, command, { expiresIn: 60 });
+  const url = await getSignedUrl(client, command, { expiresIn: 60 });
+  return { key, url };
 }
