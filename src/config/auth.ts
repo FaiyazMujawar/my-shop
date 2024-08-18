@@ -1,8 +1,9 @@
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import NextAuth from 'next-auth';
 import { db } from '~/db';
 import { users } from '~/db/schema';
+import env from '~/env';
 import GoogleProvider from './google-provider';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -14,6 +15,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         where: eq(users.id, token.sub),
       });
       if (!user) return token;
+      if (env.ADMIN_EMAILS.includes(user.email!) && user.role !== 'admin') {
+        user.role = 'admin';
+        db.update(users)
+          .set({ role: 'admin' })
+          .where(inArray(users.id, env.ADMIN_EMAILS));
+      }
       token.role = user.role;
       return token;
     },

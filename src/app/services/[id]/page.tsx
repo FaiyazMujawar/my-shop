@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import QuestionCard from '~/components/service-form/question-card';
-import { Button } from '~/components/ui/button';
 import { auth } from '~/config/auth';
 import { getServiceById } from '~/data/services';
+import OrderForm from './(order)';
 import AdminActions from './admin-actions';
 
 type ServicePageProps = {
@@ -44,7 +44,7 @@ const ServicePage = async ({ params }: ServicePageProps) => {
           {session?.user?.role == 'user' && (
             <div>
               {service.type == 'online' ? (
-                <Button>Order Now</Button>
+                <OrderForm service={service} />
               ) : (
                 <div className='text-gray-500 italic'>
                   Please visit store to avail this service

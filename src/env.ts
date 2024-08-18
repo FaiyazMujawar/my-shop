@@ -3,6 +3,8 @@ import { z, ZodError } from 'zod';
 
 config({ path: ['.env'] });
 
+const stringArray = z.coerce.string().transform((str) => str.split(/,\s*/));
+
 const stringBoolean = z.coerce
   .string()
   .transform((str) => str === 'true')
@@ -15,6 +17,12 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   DATABASE_URL: z.string(),
   SHOW_SQL: stringBoolean,
+  ADMIN_EMAILS: stringArray,
+  S3_BUCKET: z.string(),
+  S3_REGION: z.string(),
+  S3_ACCESS_KEY: z.string(),
+  S3_SECRET_KEY: z.string(),
+  S3_ENDPOINT: z.string(),
 });
 
 try {
