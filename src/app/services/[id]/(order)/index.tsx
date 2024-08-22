@@ -66,8 +66,14 @@ const OrderForm = ({ service }: OrderFormProps) => {
     defaultValues: getDefaultFormValues(service.questions),
   });
 
+  function resetAndCloseForm() {
+    form.reset();
+    setOpen(false);
+  }
+
   async function onSubmit(data: FormType) {
     const responses: Record<string, string> = {};
+    let fileUploadsSuccessful = true;
     for (const question of service.questions) {
       if (question.type == 'file') {
         const file = data[question.id] as File;
@@ -76,15 +82,19 @@ const OrderForm = ({ service }: OrderFormProps) => {
           method: 'PUT',
           body: file,
         });
-        const body = await response.json();
         if (!response.ok) {
-          console.log(body);
-          return;
+          fileUploadsSuccessful = false;
+          break;
         }
         responses[question.id] = mediaId;
       } else {
         responses[question.id] = data[question.id];
       }
+    }
+    if (!fileUploadsSuccessful) {
+      toast.error('Failed to upload files');
+      resetAndCloseForm();
+      return;
     }
     const requestBody: OrderRequest = {
       serviceId: service.id,
@@ -95,8 +105,7 @@ const OrderForm = ({ service }: OrderFormProps) => {
       toast.error(response.error);
     } else {
       toast.success('Order placed successfully');
-      form.reset();
-      setOpen(false);
+      resetAndCloseForm();
     }
   }
 

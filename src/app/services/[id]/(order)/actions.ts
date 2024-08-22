@@ -26,7 +26,9 @@ export async function placeOrder(request: OrderRequest) {
     const response = {
       orderId: order[0].id,
       answer:
-        question.type !== 'file' ? request.userResponses[question.id] : null,
+        question.type !== 'file'
+          ? request.userResponses[question.id].toString()
+          : null,
       media:
         question.type === 'file' ? request.userResponses[question.id] : null,
     };

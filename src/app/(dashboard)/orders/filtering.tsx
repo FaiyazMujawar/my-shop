@@ -1,4 +1,5 @@
 import { Table } from '@tanstack/react-table';
+import { User } from 'next-auth';
 import { Input } from '~/components/ui/input';
 import {
   Select,
@@ -9,7 +10,13 @@ import {
   SelectValue,
 } from '~/components/ui/select';
 
-export function TableFilters<TData>({ table }: { table: Table<TData> }) {
+export function TableFilters<TData>({
+  table,
+  role,
+}: {
+  table: Table<TData>;
+  role: User['role'];
+}) {
   return (
     <div className='flex gap-4 my-4'>
       <Input
@@ -20,14 +27,16 @@ export function TableFilters<TData>({ table }: { table: Table<TData> }) {
         }}
         className=''
       />
-      <Input
-        placeholder='Filter by user email...'
-        value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-        onChange={(event) =>
-          table.getColumn('email')?.setFilterValue(event.target.value)
-        }
-        className=''
-      />
+      {role == 'admin' && (
+        <Input
+          placeholder='Filter by user email...'
+          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          onChange={(event) =>
+            table.getColumn('email')?.setFilterValue(event.target.value)
+          }
+          className=''
+        />
+      )}
       <Select
         onValueChange={(value) => {
           table

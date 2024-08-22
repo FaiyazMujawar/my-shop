@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
 import { auth } from '~/config/auth';
 import { getAllOrders } from '~/data/orders';
-import { columns } from './columns';
+import { adminColumns } from './admin-columns';
 import { DataTable } from './data-table';
+import { userColumns } from './user-columns';
 
 const OrdersPage = async () => {
   const session = await auth();
@@ -15,7 +16,11 @@ const OrdersPage = async () => {
     <div className='space-y-4'>
       <div className='text-2xl'>All Orders</div>
       <div>
-        <DataTable columns={columns} data={orders} />
+        <DataTable
+          columns={session.user.role == 'admin' ? adminColumns : userColumns}
+          data={orders}
+          user={session.user}
+        />
       </div>
     </div>
   );

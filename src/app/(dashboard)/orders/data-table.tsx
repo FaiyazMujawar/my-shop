@@ -11,6 +11,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { User } from 'next-auth';
 import { useState } from 'react';
 import {
   Table,
@@ -26,11 +27,13 @@ import { TablePagination } from './pagination';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  user: User;
 }
 
 export function DataTable<TData, TValue>({
   data,
   columns,
+  user,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -49,7 +52,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='w-full'>
-      <TableFilters table={table} />
+      <TableFilters table={table} role={user.role} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

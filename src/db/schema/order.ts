@@ -20,9 +20,10 @@ export const orders = pgTable('orders', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   status: orderStatus('status').notNull().default('pending'),
-  completedAt: timestamp('completed_at', { mode: 'date' }),
-  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
+  completedAt: timestamp('completed_at', { mode: 'string' }),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+  note: text('note'),
 });
 
 export const orderRelations = relations(orders, ({ one, many }) => {

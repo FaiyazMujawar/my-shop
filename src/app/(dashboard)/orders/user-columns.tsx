@@ -1,10 +1,18 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 import { IOrder } from '~/app-types/order';
+import { Button } from '~/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu';
 import { getFormattedDate } from '~/utils/misc';
 
-export const columns: ColumnDef<IOrder>[] = [
+export const userColumns: ColumnDef<IOrder>[] = [
   {
     header: '#',
     cell: (props) => {
@@ -34,22 +42,6 @@ export const columns: ColumnDef<IOrder>[] = [
     },
   },
   {
-    id: 'username',
-    header: 'User name',
-    accessorKey: 'user.name',
-    cell: (props) => {
-      return <div className='text-sm'>{props.getValue() as string}</div>;
-    },
-  },
-  {
-    id: 'email',
-    header: 'User email',
-    accessorKey: 'user.email',
-    cell: (props) => {
-      return <div className='text-sm'>{props.getValue() as string}</div>;
-    },
-  },
-  {
     id: 'orderDate',
     header: 'Placed On',
     accessorKey: 'createdAt',
@@ -70,6 +62,26 @@ export const columns: ColumnDef<IOrder>[] = [
         <div className='text-xs border px-2 py-1 text-gray-500 rounded-full w-fit'>
           {(props.getValue() as string).toUpperCase()}
         </div>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    cell: () => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={'ghost'}>
+              <BsThreeDotsVertical className='cursor-pointer' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className='cursor-pointer'>View</DropdownMenuItem>
+            <DropdownMenuItem className='text-red-500 cursor-pointer'>
+              Cancel Order
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

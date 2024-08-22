@@ -41,17 +41,16 @@ const ServicePage = async ({ params }: ServicePageProps) => {
           {session?.user?.role == 'admin' && (
             <AdminActions serviceId={service.id} />
           )}
-          {session?.user?.role == 'user' && (
-            <div>
-              {service.type == 'online' ? (
-                <OrderForm service={service} />
-              ) : (
-                <div className='text-gray-500 italic'>
-                  Please visit store to avail this service
-                </div>
-              )}
-            </div>
-          )}
+          {(function () {
+            if (service.type == 'online') {
+              return <OrderForm service={service} />;
+            }
+            return (
+              <div className='text-gray-500 italic'>
+                Please visit store to avail this service
+              </div>
+            );
+          })()}
         </div>
       </div>
       <div className='text-xl'>Description</div>
