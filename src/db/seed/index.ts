@@ -53,8 +53,30 @@ async function seed() {
     )
     .execute();
 
-  console.log('Seeding orders');
+  console.log('Seeding media');
+  const userResponseMedia = ordersJson
+    .flatMap((order) => order.userResponses)
+    .map((response) => response.media)
+    .filter((media) => !!media)
+    .map((media) => ({
+      ...media,
+      createdAt: new Date(media.createdAt),
+      updatedAt: new Date(media.updatedAt),
+    }));
+  const orderResultMedia = ordersJson
+    .map((order) => order.result)
+    .filter((media) => !!media)
+    .map((media) => ({
+      ...media,
+      createdAt: new Date(media.createdAt),
+      updatedAt: new Date(media.updatedAt),
+    }));
+  await db
+    .insert(media)
+    .values([...userResponseMedia, ...orderResultMedia])
+    .execute();
 
+  console.log('Seeding orders');
   await db
     .insert(orders)
     .values(
@@ -65,28 +87,8 @@ async function seed() {
           | 'accepted'
           | 'rejected'
           | 'completed',
-        createdAt: new Date(order.createdAt),
-        updatedAt: new Date(order.updatedAt),
-        completedAt: order.completedAt
-          ? new Date(order.completedAt)
-          : undefined,
+        result: order.result?.id,
       }))
-    )
-    .execute();
-
-  console.log('Seeding media');
-  await db
-    .insert(media)
-    .values(
-      ordersJson
-        .flatMap((order) => order.userResponses)
-        .map((response) => response.media)
-        .filter((media) => !!media)
-        .map((media) => ({
-          ...media,
-          createdAt: new Date(media.createdAt),
-          updatedAt: new Date(media.updatedAt),
-        }))
     )
     .execute();
 
@@ -98,8 +100,6 @@ async function seed() {
         order.userResponses.map((response) => ({
           ...response,
           media: response.media?.id,
-          createdAt: new Date(response.createdAt),
-          updatedAt: new Date(response.updatedAt),
         }))
       )
     )

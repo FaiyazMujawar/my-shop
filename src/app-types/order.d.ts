@@ -1,10 +1,21 @@
-import { media, orders, services, userResponses } from '~/db/schema';
+import {
+  media,
+  orders,
+  questions,
+  services,
+  userResponses,
+  users,
+} from '~/db/schema';
 
-export type IUserResponse = typeof userResponses.$inferSelect;
+export type IUserResponse = typeof userResponses.$inferSelect & {
+  question: typeof questions.$inferSelect;
+  media: typeof media.$inferSelect;
+};
 
 export type IOrder = typeof orders.$inferSelect & {
   service: typeof services.$inferSelect;
   userResponses: IUserResponse[];
+  user: typeof users.$inferSelect;
 };
 
 export type OrderRequest = {

@@ -1,15 +1,10 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 import { IOrder } from '~/app-types/order';
 import { Button } from '~/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu';
 import { getFormattedDate } from '~/utils/misc';
 
 export const userColumns: ColumnDef<IOrder>[] = [
@@ -67,21 +62,18 @@ export const userColumns: ColumnDef<IOrder>[] = [
   },
   {
     id: 'actions',
-    cell: () => {
+    cell: ({ row: { original } }) => {
+      const router = useRouter();
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant={'ghost'}>
-              <BsThreeDotsVertical className='cursor-pointer' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem className='cursor-pointer'>View</DropdownMenuItem>
-            <DropdownMenuItem className='text-red-500 cursor-pointer'>
-              Cancel Order
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <Button
+            variant={'secondary'}
+            size={'icon'}
+            onClick={() => router.push(`/orders/${original.id}`)}
+          >
+            <MdKeyboardArrowRight />
+          </Button>
+        </div>
       );
     },
   },
