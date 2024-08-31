@@ -1,4 +1,4 @@
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomUUID } from 'crypto';
 import env from '~/env';
@@ -18,4 +18,13 @@ export async function getPresignedUploadUrl(
   });
   const url = await getSignedUrl(client, command, { expiresIn: 60 });
   return { key, url };
+}
+
+export async function getFile(objectKey: string) {
+  const command = new GetObjectCommand({
+    Bucket: env.S3_BUCKET,
+    Key: objectKey,
+  });
+  const response = await client.send(command);
+  return await response.Body?.transformToByteArray();
 }

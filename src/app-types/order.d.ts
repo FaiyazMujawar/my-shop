@@ -9,7 +9,7 @@ import {
 
 export type IUserResponse = typeof userResponses.$inferSelect & {
   question: typeof questions.$inferSelect;
-  media: typeof media.$inferSelect;
+  media: typeof media.$inferSelect | null;
 };
 
 export type IOrder = typeof orders.$inferSelect & {

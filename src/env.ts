@@ -23,6 +23,11 @@ const envSchema = z.object({
   S3_ACCESS_KEY: z.string(),
   S3_SECRET_KEY: z.string(),
   S3_ENDPOINT: z.string(),
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.coerce.number(),
+  SMTP_SECURED: stringBoolean.optional(),
+  SMTP_USER: z.string(),
+  SMTP_PASSWORD: z.string(),
 });
 
 try {

@@ -84,7 +84,10 @@ const OrderPage = async ({ params }: Props) => {
             </div>
             <div className='text-sm text-gray-600'>
               {(function () {
-                if (userResponse.question.type == 'file') {
+                if (
+                  userResponse.question.type == 'file' &&
+                  userResponse.media
+                ) {
                   return (
                     <div className='text-blue-500 underline'>
                       <a href={`/media/${userResponse.media.id!}`}>View file</a>

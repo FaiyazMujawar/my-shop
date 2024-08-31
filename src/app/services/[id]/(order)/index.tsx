@@ -75,6 +75,7 @@ const OrderForm = ({ service }: OrderFormProps) => {
     const responses: Record<string, string> = {};
     let fileUploadsSuccessful = true;
     for (const question of service.questions) {
+      if (!question.required && !data[question.id]) continue;
       if (question.type == 'file') {
         const file = data[question.id] as File;
         const { url, mediaId } = await getUploadUrl(file.type, false);

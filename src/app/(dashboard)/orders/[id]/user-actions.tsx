@@ -7,6 +7,7 @@ import { Button } from '~/components/ui/button';
 import CancelOrder from './(action-buttons)/cancel-order';
 import MarkDone from './(action-buttons)/mark-done';
 import RejectOrder from './(action-buttons)/reject-order';
+import { acceptOrder } from './actions';
 
 type Props = {
   user: User;
@@ -26,7 +27,14 @@ const UserActions = ({ user, orderStatus, orderId }: Props) => {
   }
   return (
     <div className='space-x-2'>
-      <Button variant={'success'}>Accept</Button>
+      <Button
+        variant={'success'}
+        onClick={async () => {
+          await acceptOrder(orderId);
+        }}
+      >
+        Accept
+      </Button>
       <RejectOrder orderId={orderId} />
     </div>
   );
