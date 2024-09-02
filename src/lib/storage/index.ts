@@ -20,6 +20,15 @@ export async function getPresignedUploadUrl(
   return { key, url };
 }
 
+export async function getPresignedGetUrl(objectKey: string) {
+  const command = new GetObjectCommand({
+    Bucket: env.S3_BUCKET,
+    Key: objectKey,
+  });
+  const url = await getSignedUrl(client, command, { expiresIn: 60 });
+  return url;
+}
+
 export async function getFile(objectKey: string) {
   const command = new GetObjectCommand({
     Bucket: env.S3_BUCKET,

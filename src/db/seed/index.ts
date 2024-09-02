@@ -17,8 +17,8 @@ async function truncateDb() {
   console.log('Truncating database');
 
   await db.delete(userResponses).execute();
-  await db.delete(media).execute();
   await db.delete(orders).execute();
+  await db.delete(media).execute();
   await db.delete(services).execute();
   await db.delete(accounts).execute();
   await db.delete(users).execute();

@@ -4,6 +4,7 @@
     "name": "John Doe",
     "email": "jdoe935675@gmail.com",
     "emailVerified": null,
+    "role": "admin",
     "image": "https://lh3.googleusercontent.com/a/ACg8ocJz_t7oLzqtPwxan6n0dmmgvVsklJJtjH273OJIhPWOIQTYhA=s96-c"
   },
   {
@@ -11,6 +12,7 @@
     "name": "Faiyaz Mujawar",
     "email": "fayazmujawar7@gmail.com",
     "emailVerified": null,
+    "role": "user",
     "image": "https://lh3.googleusercontent.com/a/ACg8ocKqi8qeN_eah3gl2vGSTX7FA6x2NJHJA1odfjVPf5HWhNAIffRh=s96-c"
   }
 ]

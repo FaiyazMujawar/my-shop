@@ -90,7 +90,9 @@ const OrderPage = async ({ params }: Props) => {
                 ) {
                   return (
                     <div className='text-blue-500 underline'>
-                      <a href={`/media/${userResponse.media.id!}`}>View file</a>
+                      <a href={`/api/media/${userResponse.media.id!}`}>
+                        View file
+                      </a>
                     </div>
                   );
                 }
